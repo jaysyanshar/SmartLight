@@ -13,4 +13,8 @@
         <item>Floor Lamp</item>
         <item>Ceiling Lamp</item>
     </string-array>
+    <string name="success_message">"Added the new light."</string>
+    <string name="failed_message">"Failed to add the new light."</string>
+    <string name="http_url">"http://%s"</string>
+    <string name="http">http://</string>
 </resources>

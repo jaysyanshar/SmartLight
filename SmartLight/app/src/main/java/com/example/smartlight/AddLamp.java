@@ -8,21 +8,57 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.util.concurrent.ExecutionException;
+
 public class AddLamp extends AppCompatActivity {
 
     public static final String EXTRA_LAMP_DATA = "lamp_data";
+    private static final String LAMP_DEFAULT_NAME = "New Light";
 
     private Spinner typeSpinner;
 
+    private boolean isValidUrl(String url) {
+        String httpUrl = getString(R.string.http_url, url);
+
+        URLValidator validator = new URLValidator();
+
+        try {
+
+            return validator.execute(httpUrl).get();
+
+        } catch (ExecutionException e) {
+
+            e.printStackTrace();
+
+        } catch (InterruptedException e) {
+
+            e.printStackTrace();
+
+        }
+
+        return false;
+    }
+
     public void addLamp(View view) {
-        EditText nameEditText = findViewById(R.id.nameEditText);
         EditText urlEditText = findViewById(R.id.urlEditText);
+        String url = urlEditText.getText().toString();
 
-        Lamp lamp = new Lamp(nameEditText.getText().toString(), urlEditText.getText().toString(), typeSpinner.getSelectedItemPosition(), false);
+        if (isValidUrl(url)) {
+            EditText nameEditText = findViewById(R.id.nameEditText);
+            String name = nameEditText.getText().toString();
 
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra(EXTRA_LAMP_DATA, lamp);
-        setResult(RESULT_OK, returnIntent);
+            if (name.equals("")) {
+                name = LAMP_DEFAULT_NAME;
+            }
+
+            Lamp lamp = new Lamp(name, url, typeSpinner.getSelectedItemPosition(), false);
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra(EXTRA_LAMP_DATA, lamp);
+            setResult(RESULT_OK, returnIntent);
+        } else {
+            setResult(RESULT_CANCELED);
+        }
+
         finish();
     }
 

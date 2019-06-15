@@ -1,22 +1,55 @@
 package com.example.smartlight;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int LAMP_REQUEST = 1;
+    private static final String SHARED_PREFERENCES_NAME = "lamp_data";
+    private static final String LAMP_KEY = "lamp_key";
 
     private LampData lampData;
     private LampAdapter lampAdapter;
     private ListView lampListView;
+
+    private void saveData() {
+        ArrayList<Lamp> lampArrayList = lampData.getLamps();
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(lampArrayList);
+        editor.putString(LAMP_KEY, json);
+        editor.apply();
+    }
+
+    private void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(LAMP_KEY, null);
+        Type type = new TypeToken<ArrayList<Lamp>>(){}.getType();
+        ArrayList<Lamp> lampArrayList;
+        lampArrayList = gson.fromJson(json, type);
+
+        if (lampArrayList == null) {
+            lampData = new LampData();
+        } else {
+            lampData = new LampData(lampArrayList);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +58,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ArrayList<Lamp> lamps = new ArrayList<>();
-        lampData = new LampData(lamps);
+        loadData();
 
         lampAdapter = new LampAdapter(this, lampData.getLamps());
         lampListView = findViewById(R.id.lampListView);
         lampListView.setAdapter(lampAdapter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveData();
     }
 
     @Override
@@ -39,10 +77,26 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == LAMP_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Lamp lamp = data.getParcelableExtra(AddLamp.EXTRA_LAMP_DATA);
-                lampData.add(lamp);
 
-                lampAdapter = new LampAdapter(this, lampData.getLamps());
-                lampListView.setAdapter(lampAdapter);
+                boolean urlAlreadyExist = false;
+                for (Lamp currentLamp : lampData.getLamps()) {
+                    if (currentLamp.getUrl().equals(lamp.getUrl())) {
+                        urlAlreadyExist = true;
+                        break;
+                    }
+                }
+
+                if (urlAlreadyExist) {
+                    Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.failed_message), Snackbar.LENGTH_SHORT).show();
+                } else {
+                    lampData.add(lamp);
+                    lampAdapter = new LampAdapter(this, lampData.getLamps());
+                    lampListView.setAdapter(lampAdapter);
+                    Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.success_message), Snackbar.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.failed_message), Snackbar.LENGTH_SHORT).show();
             }
         }
     }

@@ -45,21 +45,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameEditText" />
 
-    <EditText
-        android:id="@+id/urlEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/edit_text_background"
-        android:ems="10"
-        android:inputType="textUri"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/urlTextView" />
-
     <TextView
         android:id="@+id/typeTextView"
         android:layout_width="wrap_content"
@@ -70,7 +55,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/secondary_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/urlEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/urlLinearLayout" />
 
     <Spinner
         android:id="@+id/lampTypeSpinner"
@@ -118,4 +103,39 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/urlLinearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/urlTextView">
+
+        <TextView
+            android:id="@+id/httpTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/edit_text_background"
+            android:gravity="center"
+            android:text="@string/http"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/secondary_text" />
+
+        <EditText
+            android:id="@+id/urlEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:background="@drawable/edit_text_background"
+            android:ems="10"
+            android:inputType="textUri"
+            android:padding="8dp" />
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
