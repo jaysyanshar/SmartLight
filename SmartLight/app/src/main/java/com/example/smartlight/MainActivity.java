@@ -8,7 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,6 +30,18 @@ public class MainActivity extends AppCompatActivity {
     private LampData lampData;
     private LampAdapter lampAdapter;
     private ListView lampListView;
+
+    public void removeLamp(View view) {
+        String name = lampData.getLamps().get(Integer.valueOf(view.getTag().toString())).getName();
+        lampData.remove(Integer.valueOf(view.getTag().toString()));
+        updateListView();
+        Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.remove_message, name), Snackbar.LENGTH_LONG).show();
+    }
+
+    private void updateListView() {
+        lampAdapter = new LampAdapter(this, lampData.getLamps());
+        lampListView.setAdapter(lampAdapter);
+    }
 
     private void saveData() {
         ArrayList<Lamp> lampArrayList = lampData.getLamps();
@@ -60,9 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
         loadData();
 
-        lampAdapter = new LampAdapter(this, lampData.getLamps());
         lampListView = findViewById(R.id.lampListView);
-        lampListView.setAdapter(lampAdapter);
+        updateListView();
     }
 
     @Override
@@ -87,16 +103,15 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (urlAlreadyExist) {
-                    Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.failed_message), Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.failed_message), Snackbar.LENGTH_LONG).show();
                 } else {
                     lampData.add(lamp);
-                    lampAdapter = new LampAdapter(this, lampData.getLamps());
-                    lampListView.setAdapter(lampAdapter);
-                    Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.success_message), Snackbar.LENGTH_SHORT).show();
+                    updateListView();
+                    Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
                 }
 
             } else {
-                Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.failed_message), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.failed_message), Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -125,8 +140,10 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_lamp) {
+
             Intent intent = new Intent(getApplicationContext(), AddLamp.class);
             startActivityForResult(intent, LAMP_REQUEST);
+
         }
 
         return super.onOptionsItemSelected(item);

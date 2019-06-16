@@ -6,6 +6,7 @@
     <string name="lamp_url">Lamp URL</string>
     <string name="lamp_type">Lamp Type</string>
     <string name="add_lamp">Add Lamp</string>
+    <string name="remove_lamp">Remove Lamp</string>
     <string name="cancel">Cancel</string>
     <string-array name="lamp_types">
         <item>Default Lamp</item>
@@ -15,6 +16,11 @@
     </string-array>
     <string name="success_message">"Added the new light."</string>
     <string name="failed_message">"Failed to add the new light."</string>
+    <string name="remove_message">"%s removed successfully."</string>
     <string name="http_url">"http://%s"</string>
     <string name="http">http://</string>
+    <string name="remove">Remove</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="exit_remove">Exit Remove</string>
 </resources>
