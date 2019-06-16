@@ -9,11 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String LAMP_KEY = "lamp_key";
 
     private LampData lampData;
-    private LampAdapter lampAdapter;
     private ListView lampListView;
 
     public void removeLamp(View view) {
@@ -39,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateListView() {
-        lampAdapter = new LampAdapter(this, lampData.getLamps());
+        LampAdapter lampAdapter = new LampAdapter(this, lampData.getLamps());
         lampListView.setAdapter(lampAdapter);
     }
 

@@ -31,7 +31,4 @@ public class LampData {
         lamps.remove(index);
     }
 
-    public void toggleLamp(int index) {
-        lamps.get(index).setStatusOn(!lamps.get(index).isStatusOn());
-    }
 }
