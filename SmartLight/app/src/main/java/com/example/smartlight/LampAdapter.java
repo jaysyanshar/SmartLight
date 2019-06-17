@@ -1,9 +1,12 @@
 package com.example.smartlight;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +21,12 @@ import java.util.ArrayList;
 
 public class LampAdapter extends ArrayAdapter<Lamp> {
 
+    private Context context;
+    public static final String EXTRA_CONFIG = "config";
+
     public LampAdapter(Activity context, ArrayList<Lamp> lamps) {
         super(context, 0, lamps);
+        this.context = context;
     }
 
     @NonNull
@@ -98,7 +105,9 @@ public class LampAdapter extends ArrayAdapter<Lamp> {
         listItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, ConfigureLamp.class);
+                intent.putExtra(EXTRA_CONFIG, currentLamp);
+                context.startActivity(intent);
             }
         });
 

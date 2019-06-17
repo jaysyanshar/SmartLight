@@ -11,9 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppThemeLight">
-        <activity android:name=".AddLamp"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/add_lamp"></activity>
+        <activity android:name=".ConfigureLamp"
+            android:label="@string/configure_lamp"
+            android:theme="@style/ConfigPageThemeLight"
+            android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".AddLamp"
+            android:label="@string/add_lamp"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
