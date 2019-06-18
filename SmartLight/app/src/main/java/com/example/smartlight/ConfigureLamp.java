@@ -28,6 +28,10 @@ public class ConfigureLamp extends AppCompatActivity {
             imageButton.setTag(0);
             editText.setEnabled(false);
             imageButton.setImageResource(android.R.drawable.ic_menu_edit);
+            if (!editText.getText().toString().equals("")) {
+                String edited = editText.getText().toString();
+                editText.setHint(edited);
+            }
             editText.setText("");
         }
     }
