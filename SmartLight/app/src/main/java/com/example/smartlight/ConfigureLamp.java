@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -33,6 +34,39 @@ public class ConfigureLamp extends AppCompatActivity {
                 editText.setHint(edited);
             }
             editText.setText("");
+        }
+    }
+
+    private void setLampImage(ImageView lampImage, int lampType) {
+        switch (lampType) {
+            case Lamp.DESK: {
+                lampImage.setImageResource(R.drawable.lamp_desk);
+                break;
+            }
+            case Lamp.FLOOR: {
+                lampImage.setImageResource(R.drawable.lamp_floor);
+                break;
+            }
+            case Lamp.CEILING: {
+                lampImage.setImageResource(R.drawable.lamp_ceiling);
+                break;
+            }
+            default: {
+                lampImage.setImageResource(R.drawable.lamp_default);
+                break;
+            }
+        }
+    }
+
+    private void setView(ConstraintLayout layout, boolean lampIsOn, EditText name, EditText url) {
+        if (lampIsOn) {
+            layout.setBackgroundColor(getColor(android.R.color.background_light));
+            name.setTextColor(getColor(android.R.color.primary_text_light));
+            url.setTextColor(getColor(android.R.color.primary_text_light));
+        } else {
+            layout.setBackgroundColor(getColor(android.R.color.background_dark));
+            name.setTextColor(getColor(android.R.color.primary_text_dark));
+            url.setTextColor(getColor(android.R.color.primary_text_dark));
         }
     }
 
@@ -68,35 +102,9 @@ public class ConfigureLamp extends AppCompatActivity {
         });
 
         ImageView lampImage = findViewById(R.id.configLampImageView);
-        switch (lamp.getType()) {
-            case Lamp.DESK: {
-                lampImage.setImageResource(R.drawable.lamp_desk);
-                break;
-            }
-            case Lamp.FLOOR: {
-                lampImage.setImageResource(R.drawable.lamp_floor);
-                break;
-            }
-            case Lamp.CEILING: {
-                lampImage.setImageResource(R.drawable.lamp_ceiling);
-                break;
-            }
-            default: {
-                lampImage.setImageResource(R.drawable.lamp_default);
-                break;
-            }
-        }
+        setLampImage(lampImage, lamp.getType());
 
         ConstraintLayout configLayout = findViewById(R.id.configLayout);
-
-        if (lamp.isStatusOn()) {
-            configLayout.setBackgroundColor(getColor(android.R.color.background_light));
-            name.setTextColor(getColor(android.R.color.primary_text_light));
-            url.setTextColor(getColor(android.R.color.primary_text_light));
-        } else {
-            configLayout.setBackgroundColor(getColor(android.R.color.background_dark));
-            name.setTextColor(getColor(android.R.color.primary_text_dark));
-            url.setTextColor(getColor(android.R.color.primary_text_dark));
-        }
+        setView(configLayout, lamp.isStatusOn(), name, url);
     }
 }

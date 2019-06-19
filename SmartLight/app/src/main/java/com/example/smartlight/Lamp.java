@@ -8,17 +8,20 @@ public class Lamp implements Parcelable {
     private String name;
     private String url;
     private int type;
+    private int brightness;
     private boolean statusOn;
 
+    // type value
     public static final int DEFAULT = 0;
     public static final int DESK = 1;
     public static final int FLOOR = 2;
     public static final int CEILING = 3;
 
-    public Lamp(String name, String url, int type, boolean statusOn) {
+    public Lamp(String name, String url, int type, int brightness, boolean statusOn) {
         setName(name);
         setUrl(url);
         setType(type);
+        setBrightness(brightness);
         setStatusOn(statusOn);
     }
 
@@ -26,6 +29,7 @@ public class Lamp implements Parcelable {
         name = in.readString();
         url = in.readString();
         type = in.readInt();
+        brightness = in.readInt();
         statusOn = in.readByte() != 0;
     }
 
@@ -69,6 +73,16 @@ public class Lamp implements Parcelable {
         return type;
     }
 
+    public void setBrightness(int brightness) {
+        if (brightness >= 0 && brightness <= 100) {
+            this.brightness = brightness;
+        }
+    }
+
+    public int getBrightness() {
+        return brightness;
+    }
+
     public void setStatusOn(boolean statusOn) {
         this.statusOn = statusOn;
     }
@@ -87,6 +101,7 @@ public class Lamp implements Parcelable {
         dest.writeString(name);
         dest.writeString(url);
         dest.writeInt(type);
+        dest.writeInt(brightness);
         dest.writeByte((byte) (statusOn ? 1 : 0));
     }
 }

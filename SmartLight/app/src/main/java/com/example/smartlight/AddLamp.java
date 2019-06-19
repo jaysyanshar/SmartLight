@@ -51,7 +51,7 @@ public class AddLamp extends AppCompatActivity {
                 name = LAMP_DEFAULT_NAME;
             }
 
-            Lamp lamp = new Lamp(name, url, typeSpinner.getSelectedItemPosition(), false);
+            Lamp lamp = new Lamp(name, url, typeSpinner.getSelectedItemPosition(), 0, false);
             Intent returnIntent = new Intent();
             returnIntent.putExtra(EXTRA_LAMP_DATA, lamp);
             setResult(RESULT_OK, returnIntent);

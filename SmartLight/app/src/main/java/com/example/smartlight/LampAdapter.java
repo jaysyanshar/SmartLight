@@ -58,24 +58,7 @@ public class LampAdapter extends ArrayAdapter<Lamp> {
         lampRemoveButton.setVisibility(View.GONE);
 
         final ImageView lampImageView = listItemView.findViewById(R.id.lampImageView);
-        switch (currentLamp.getType()) {
-            case Lamp.DESK: {
-                lampImageView.setImageResource(R.drawable.lamp_desk);
-                break;
-            }
-            case Lamp.FLOOR: {
-                lampImageView.setImageResource(R.drawable.lamp_floor);
-                break;
-            }
-            case Lamp.CEILING: {
-                lampImageView.setImageResource(R.drawable.lamp_ceiling);
-                break;
-            }
-            default: {
-                lampImageView.setImageResource(R.drawable.lamp_default);
-                break;
-            }
-        }
+        setLampImage(lampImageView, currentLamp.getType());
 
         // Listener
         listItemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -120,5 +103,26 @@ public class LampAdapter extends ArrayAdapter<Lamp> {
 
         // Return the list view
         return listItemView;
+    }
+
+    private void setLampImage(ImageView lampImage, int lampType) {
+        switch (lampType) {
+            case Lamp.DESK: {
+                lampImage.setImageResource(R.drawable.lamp_desk);
+                break;
+            }
+            case Lamp.FLOOR: {
+                lampImage.setImageResource(R.drawable.lamp_floor);
+                break;
+            }
+            case Lamp.CEILING: {
+                lampImage.setImageResource(R.drawable.lamp_ceiling);
+                break;
+            }
+            default: {
+                lampImage.setImageResource(R.drawable.lamp_default);
+                break;
+            }
+        }
     }
 }
