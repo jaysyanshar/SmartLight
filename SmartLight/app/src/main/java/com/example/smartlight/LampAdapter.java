@@ -3,26 +3,28 @@ package com.example.smartlight;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class LampAdapter extends ArrayAdapter<Lamp> {
 
     private Context context;
+
     public static final String EXTRA_CONFIG = "config";
+    public static final String EXTRA_CONFIG_INDEX = "config_index";
 
     public LampAdapter(Activity context, ArrayList<Lamp> lamps) {
         super(context, 0, lamps);
@@ -40,18 +42,21 @@ public class LampAdapter extends ArrayAdapter<Lamp> {
 
         // Get the current lamp
         final Lamp currentLamp = getItem(position);
+        currentLamp.setId(position);
 
         // Set the view elements
+        listItemView.setTag(position);
+
         TextView lampNameTextView = listItemView.findViewById(R.id.lampNameTextView);
         lampNameTextView.setText(currentLamp.getName());
 
         TextView lampUrlTextView = listItemView.findViewById(R.id.lampUrlTextView);
         lampUrlTextView.setText(currentLamp.getUrl());
 
-        final ToggleButton lampToggleButton = listItemView.findViewById(R.id.lampToggleButton);
-        lampToggleButton.setChecked(currentLamp.isStatusOn());
-        lampToggleButton.setTag(position);
-        lampToggleButton.setVisibility(View.VISIBLE);
+        final TextView lampStatusTextView = listItemView.findViewById(R.id.lampStatus);
+        lampStatusTextView.setText(currentLamp.isStatusOn() ? context.getString(R.string.on) : context.getString(R.string.off));
+        lampStatusTextView.setTag(position);
+        lampStatusTextView.setVisibility(View.VISIBLE);
 
         final Button lampRemoveButton = listItemView.findViewById(R.id.lampRemoveButton);
         lampRemoveButton.setTag(position);
@@ -91,13 +96,6 @@ public class LampAdapter extends ArrayAdapter<Lamp> {
                 Intent intent = new Intent(context, ConfigureLamp.class);
                 intent.putExtra(EXTRA_CONFIG, currentLamp);
                 context.startActivity(intent);
-            }
-        });
-
-        lampToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                currentLamp.setStatusOn(isChecked);
             }
         });
 

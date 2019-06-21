@@ -65,6 +65,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void getConfigChange() {
+        try {
+            Intent intent = getIntent();
+            Lamp lamp = intent.getParcelableExtra(ConfigureLamp.EXTRA_RETURN_CONFIG);
+            lampData.getLamps().get(lamp.getId()).setName(lamp.getName());
+            lampData.getLamps().get(lamp.getId()).setUrl(lamp.getUrl());
+            lampData.getLamps().get(lamp.getId()).setBrightness(lamp.getBrightness());
+            lampData.getLamps().get(lamp.getId()).setStatusOn(lamp.isStatusOn());
+            updateListView();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +91,12 @@ public class MainActivity extends AppCompatActivity {
 
         lampListView = findViewById(R.id.lampListView);
         updateListView();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getConfigChange();
     }
 
     @Override

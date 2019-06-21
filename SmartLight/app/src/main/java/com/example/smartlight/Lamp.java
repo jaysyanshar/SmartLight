@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 public class Lamp implements Parcelable {
 
+    private int id;
     private String name;
     private String url;
     private int type;
@@ -17,7 +18,8 @@ public class Lamp implements Parcelable {
     public static final int FLOOR = 2;
     public static final int CEILING = 3;
 
-    public Lamp(String name, String url, int type, int brightness, boolean statusOn) {
+    public Lamp(int id, String name, String url, int type, int brightness, boolean statusOn) {
+        setId(id);
         setName(name);
         setUrl(url);
         setType(type);
@@ -26,11 +28,12 @@ public class Lamp implements Parcelable {
     }
 
     protected Lamp(Parcel in) {
-        name = in.readString();
-        url = in.readString();
-        type = in.readInt();
-        brightness = in.readInt();
-        statusOn = in.readByte() != 0;
+        setId(in.readInt());
+        setName(in.readString());
+        setUrl(in.readString());
+        setType(in.readInt());
+        setBrightness(in.readInt());
+        setStatusOn(in.readByte() != 0);
     }
 
     public static final Creator<Lamp> CREATOR = new Creator<Lamp>() {
@@ -44,6 +47,18 @@ public class Lamp implements Parcelable {
             return new Lamp[size];
         }
     };
+
+    public void setId(int id) {
+        if (id >= 0) {
+            this.id = id;
+        } else {
+            this.id = 0;
+        }
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -74,8 +89,10 @@ public class Lamp implements Parcelable {
     }
 
     public void setBrightness(int brightness) {
-        if (brightness >= 0 && brightness <= 100) {
+        if (brightness >= 0 && brightness <= 255) {
             this.brightness = brightness;
+        } else {
+            this.brightness = 100;
         }
     }
 
@@ -98,6 +115,7 @@ public class Lamp implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(name);
         dest.writeString(url);
         dest.writeInt(type);

@@ -44,16 +44,15 @@
             tools:text="https://www.lamp.com/livingroom" />
     </LinearLayout>
 
-    <ToggleButton
-        android:id="@+id/lampToggleButton"
-        style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+    <TextView
+        android:id="@+id/lampStatus"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:enabled="false"
-        android:textColor="@color/design_default_color_primary"
-        android:textOff="@string/off"
-        android:textOn="@string/on" />
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/design_default_color_primary" />
 
     <Button
         android:id="@+id/lampRemoveButton"

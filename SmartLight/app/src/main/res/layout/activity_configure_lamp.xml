@@ -23,7 +23,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:layout_constraintTop_toBottomOf="@+id/brightControl"
         tools:srcCompat="@drawable/lamp_default" />
 
     <LinearLayout
@@ -125,7 +125,7 @@
     </LinearLayout>
 
     <SeekBar
-        android:id="@+id/seekBar"
+        android:id="@+id/brightControl"
         style="@style/Widget.AppCompat.SeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
