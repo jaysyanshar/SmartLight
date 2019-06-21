@@ -3,6 +3,9 @@ package com.example.smartlight;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -10,11 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,12 +21,10 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import static android.provider.Settings.System.SCREEN_BRIGHTNESS;
 import static android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE;
-import static android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
 import static android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL;
 
 public class ConfigureLamp extends AppCompatActivity {
@@ -38,9 +35,14 @@ public class ConfigureLamp extends AppCompatActivity {
 
     private Lamp lamp;
 
+    // Screen Brightness
     private boolean settingsGranted = false;
     private int defaultScreenBrightnessMode;
     private int defaultScreenBrightness;
+
+    // Camera Flashlight
+    private CameraManager mCameraManager;
+    private String mCameraId;
 
     private void showKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -94,7 +96,35 @@ public class ConfigureLamp extends AppCompatActivity {
         }
     }
 
+    private boolean isFlashAvailable() {
+        return getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    }
+
+    private void getCamera() {
+        //getting the camera manager and camera id
+        mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        try {
+            mCameraId = mCameraManager.getCameraIdList()[0];
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void toggleFlash(boolean status) {
+        try {
+            mCameraManager.setTorchMode(mCameraId, status);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setView(ConstraintLayout layout, boolean lampIsOn, EditText name, EditText url, SeekBar brightness) {
+        // Flashlight
+        if (isFlashAvailable()) {
+            toggleFlash(lampIsOn);
+        }
+
+        // View and brightness
         if (lampIsOn) {
             if (settingsGranted) {
                 Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS_MODE, SCREEN_BRIGHTNESS_MODE_MANUAL);
@@ -281,6 +311,8 @@ public class ConfigureLamp extends AppCompatActivity {
         });
 
         final ConstraintLayout configLayout = findViewById(R.id.configLayout);
+
+        getCamera();
         setView(configLayout, lamp.isStatusOn(), name, url, brightControl);
 
         ImageView lampImage = findViewById(R.id.configLampImageView);
@@ -297,6 +329,10 @@ public class ConfigureLamp extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (isFlashAvailable()) {
+            toggleFlash(false);
+        }
+
         if (settingsGranted) {
             Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS_MODE, defaultScreenBrightnessMode);
             Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS, defaultScreenBrightness);
