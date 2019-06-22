@@ -4,9 +4,9 @@
     tools:context="com.example.smartlight.MainActivity">
 
     <item
-        android:id="@+id/action_add_lamp"
+        android:id="@+id/action_add_light"
         android:orderInCategory="1"
-        android:title="@string/add_lamp"
+        android:title="@string/add_light"
         app:showAsAction="never" />
 
 </menu>

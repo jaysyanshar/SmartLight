@@ -7,14 +7,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
-public class AddLamp extends AppCompatActivity {
+public class AddLight extends AppCompatActivity {
 
-    public static final String EXTRA_LAMP_DATA = "lamp_data";
-    public static final String LAMP_DEFAULT_NAME = "New Light";
+    public static final String EXTRA_LIGHT_DATA = "light_data";
+    public static final String LIGHT_DEFAULT_NAME = "New Light";
 
     private Spinner typeSpinner;
 
@@ -40,7 +39,7 @@ public class AddLamp extends AppCompatActivity {
         return false;
     }
 
-    public void addLamp(View view) {
+    public void addLight(View view) {
         EditText urlEditText = findViewById(R.id.urlEditText);
         String url = urlEditText.getText().toString();
 
@@ -49,12 +48,12 @@ public class AddLamp extends AppCompatActivity {
             String name = nameEditText.getText().toString();
 
             if (name.equals("")) {
-                name = LAMP_DEFAULT_NAME;
+                name = LIGHT_DEFAULT_NAME;
             }
 
-            Lamp lamp = new Lamp(0, name, url, typeSpinner.getSelectedItemPosition(), 100, false);
+            Light light = new Light(0, name, url, typeSpinner.getSelectedItemPosition(), 100, false);
             Intent returnIntent = new Intent();
-            returnIntent.putExtra(EXTRA_LAMP_DATA, lamp);
+            returnIntent.putExtra(EXTRA_LIGHT_DATA, light);
             setResult(RESULT_OK, returnIntent);
         } else {
             setResult(RESULT_CANCELED);
@@ -71,12 +70,12 @@ public class AddLamp extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_lamp);
+        setContentView(R.layout.activity_add_light);
 
-        String[] lampNames = getResources().getStringArray(R.array.lamp_types);
+        String[] lightNames = getResources().getStringArray(R.array.light_types);
 
-        typeSpinner = findViewById(R.id.lampTypeSpinner);
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, lampNames);
+        typeSpinner = findViewById(R.id.lightTypeSpinner);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, lightNames);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         typeSpinner.setAdapter(spinnerAdapter);

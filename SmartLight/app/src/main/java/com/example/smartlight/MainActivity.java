@@ -9,9 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,58 +19,58 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int LAMP_REQUEST = 1;
-    private static final String SHARED_PREFERENCES_NAME = "lamp_data";
-    private static final String LAMP_KEY = "lamp_key";
+    public static final int LIGHT_REQUEST = 1;
+    private static final String SHARED_PREFERENCES_NAME = "light_data";
+    private static final String LIGHT_KEY = "light_key";
 
-    private LampData lampData;
-    private ListView lampListView;
+    private LightData lightData;
+    private ListView lightListView;
 
-    public void removeLamp(View view) {
-        String name = lampData.getLamps().get(Integer.valueOf(view.getTag().toString())).getName();
-        lampData.remove(Integer.valueOf(view.getTag().toString()));
+    public void removeLight(View view) {
+        String name = lightData.getLights().get(Integer.valueOf(view.getTag().toString())).getName();
+        lightData.remove(Integer.valueOf(view.getTag().toString()));
         updateListView();
         Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.remove_message, name), Snackbar.LENGTH_LONG).show();
     }
 
     private void updateListView() {
-        LampAdapter lampAdapter = new LampAdapter(this, lampData.getLamps());
-        lampListView.setAdapter(lampAdapter);
+        LightAdapter lightAdapter = new LightAdapter(this, lightData.getLights());
+        lightListView.setAdapter(lightAdapter);
     }
 
     private void saveData() {
-        ArrayList<Lamp> lampArrayList = lampData.getLamps();
+        ArrayList<Light> lightArrayList = lightData.getLights();
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(lampArrayList);
-        editor.putString(LAMP_KEY, json);
+        String json = gson.toJson(lightArrayList);
+        editor.putString(LIGHT_KEY, json);
         editor.apply();
     }
 
     private void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = sharedPreferences.getString(LAMP_KEY, null);
-        Type type = new TypeToken<ArrayList<Lamp>>(){}.getType();
-        ArrayList<Lamp> lampArrayList;
-        lampArrayList = gson.fromJson(json, type);
+        String json = sharedPreferences.getString(LIGHT_KEY, null);
+        Type type = new TypeToken<ArrayList<Light>>(){}.getType();
+        ArrayList<Light> lightArrayList;
+        lightArrayList = gson.fromJson(json, type);
 
-        if (lampArrayList == null) {
-            lampData = new LampData();
+        if (lightArrayList == null) {
+            lightData = new LightData();
         } else {
-            lampData = new LampData(lampArrayList);
+            lightData = new LightData(lightArrayList);
         }
     }
 
     private void getConfigChange() {
         try {
             Intent intent = getIntent();
-            Lamp lamp = intent.getParcelableExtra(ConfigureLamp.EXTRA_RETURN_CONFIG);
-            lampData.getLamps().get(lamp.getId()).setName(lamp.getName());
-            lampData.getLamps().get(lamp.getId()).setUrl(lamp.getUrl());
-            lampData.getLamps().get(lamp.getId()).setBrightness(lamp.getBrightness());
-            lampData.getLamps().get(lamp.getId()).setStatusOn(lamp.isStatusOn());
+            Light light = intent.getParcelableExtra(ConfigureLight.EXTRA_RETURN_CONFIG);
+            lightData.getLights().get(light.getId()).setName(light.getName());
+            lightData.getLights().get(light.getId()).setUrl(light.getUrl());
+            lightData.getLights().get(light.getId()).setBrightness(light.getBrightness());
+            lightData.getLights().get(light.getId()).setStatusOn(light.isStatusOn());
             updateListView();
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadData();
 
-        lampListView = findViewById(R.id.lampListView);
+        lightListView = findViewById(R.id.lightListView);
         updateListView();
     }
 
@@ -108,13 +106,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LAMP_REQUEST) {
+        if (requestCode == LIGHT_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Lamp lamp = data.getParcelableExtra(AddLamp.EXTRA_LAMP_DATA);
+                Light light = data.getParcelableExtra(AddLight.EXTRA_LIGHT_DATA);
 
                 boolean urlAlreadyExist = false;
-                for (Lamp currentLamp : lampData.getLamps()) {
-                    if (currentLamp.getUrl().equals(lamp.getUrl())) {
+                for (Light currentLight : lightData.getLights()) {
+                    if (currentLight.getUrl().equals(light.getUrl())) {
                         urlAlreadyExist = true;
                         break;
                     }
@@ -123,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 if (urlAlreadyExist) {
                     Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.failed_message), Snackbar.LENGTH_LONG).show();
                 } else {
-                    lampData.add(lamp);
+                    lightData.add(light);
                     updateListView();
                     Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
                 }
@@ -157,10 +155,10 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_add_lamp) {
+        if (id == R.id.action_add_light) {
 
-            Intent intent = new Intent(getApplicationContext(), AddLamp.class);
-            startActivityForResult(intent, LAMP_REQUEST);
+            Intent intent = new Intent(getApplicationContext(), AddLight.class);
+            startActivityForResult(intent, LIGHT_REQUEST);
 
         }
 

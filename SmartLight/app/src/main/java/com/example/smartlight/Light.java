@@ -3,7 +3,7 @@ package com.example.smartlight;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Lamp implements Parcelable {
+public class Light implements Parcelable {
 
     private int id;
     private String name;
@@ -13,12 +13,12 @@ public class Lamp implements Parcelable {
     private boolean statusOn;
 
     // type value
-    public static final int DEFAULT = 0;
-    public static final int DESK = 1;
-    public static final int FLOOR = 2;
-    public static final int CEILING = 3;
+    private static final int DEFAULT = 0;
+    static final int DESK = 1;
+    static final int FLOOR = 2;
+    static final int CEILING = 3;
 
-    public Lamp(int id, String name, String url, int type, int brightness, boolean statusOn) {
+    Light(int id, String name, String url, int type, int brightness, boolean statusOn) {
         setId(id);
         setName(name);
         setUrl(url);
@@ -27,7 +27,7 @@ public class Lamp implements Parcelable {
         setStatusOn(statusOn);
     }
 
-    protected Lamp(Parcel in) {
+    private Light(Parcel in) {
         setId(in.readInt());
         setName(in.readString());
         setUrl(in.readString());
@@ -36,15 +36,15 @@ public class Lamp implements Parcelable {
         setStatusOn(in.readByte() != 0);
     }
 
-    public static final Creator<Lamp> CREATOR = new Creator<Lamp>() {
+    public static final Creator<Light> CREATOR = new Creator<Light>() {
         @Override
-        public Lamp createFromParcel(Parcel in) {
-            return new Lamp(in);
+        public Light createFromParcel(Parcel in) {
+            return new Light(in);
         }
 
         @Override
-        public Lamp[] newArray(int size) {
-            return new Lamp[size];
+        public Light[] newArray(int size) {
+            return new Light[size];
         }
     };
 
@@ -68,15 +68,15 @@ public class Lamp implements Parcelable {
         return name;
     }
 
-    public void setUrl(String url) {
+    void setUrl(String url) {
         this.url = url;
     }
 
-    public String getUrl() {
+    String getUrl() {
         return url;
     }
 
-    public void setType(int type) {
+    private void setType(int type) {
         if (type == DESK || type == FLOOR || type == CEILING) {
             this.type = type;
         } else {
@@ -84,11 +84,11 @@ public class Lamp implements Parcelable {
         }
     }
 
-    public int getType() {
+    int getType() {
         return type;
     }
 
-    public void setBrightness(int brightness) {
+    void setBrightness(int brightness) {
         if (brightness >= 0 && brightness <= 255) {
             this.brightness = brightness;
         } else {
@@ -96,15 +96,15 @@ public class Lamp implements Parcelable {
         }
     }
 
-    public int getBrightness() {
+    int getBrightness() {
         return brightness;
     }
 
-    public void setStatusOn(boolean statusOn) {
+    void setStatusOn(boolean statusOn) {
         this.statusOn = statusOn;
     }
 
-    public boolean isStatusOn() {
+    boolean isStatusOn() {
         return statusOn;
     }
 

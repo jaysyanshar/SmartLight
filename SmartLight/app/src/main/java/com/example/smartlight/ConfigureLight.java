@@ -1,5 +1,6 @@
 package com.example.smartlight;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -22,20 +22,20 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import java.security.Key;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import static android.provider.Settings.System.SCREEN_BRIGHTNESS;
 import static android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE;
 import static android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL;
 
-public class ConfigureLamp extends AppCompatActivity {
+public class ConfigureLight extends AppCompatActivity {
 
     public static final String EXTRA_RETURN_CONFIG = "return_config";
 
     private static final int SETTINGS_REQUEST_CODE = 1000;
 
-    private Lamp lamp;
+    private Light light;
 
     // Screen Brightness
     private boolean settingsGranted = false;
@@ -48,12 +48,14 @@ public class ConfigureLamp extends AppCompatActivity {
 
     private void showKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert imm != null;
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
     }
 
     private void hideKeyboard() {
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        assert inputManager != null;
+        inputManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void editCurrentText(ImageButton imageButton, EditText editText) {
@@ -77,22 +79,22 @@ public class ConfigureLamp extends AppCompatActivity {
         }
     }
 
-    private void setLampImage(ImageView lampImage, int lampType) {
-        switch (lampType) {
-            case Lamp.DESK: {
-                lampImage.setImageResource(R.drawable.lamp_desk);
+    private void setLightImage(ImageView lightImage, int lightType) {
+        switch (lightType) {
+            case Light.DESK: {
+                lightImage.setImageResource(R.drawable.light_desk);
                 break;
             }
-            case Lamp.FLOOR: {
-                lampImage.setImageResource(R.drawable.lamp_floor);
+            case Light.FLOOR: {
+                lightImage.setImageResource(R.drawable.light_floor);
                 break;
             }
-            case Lamp.CEILING: {
-                lampImage.setImageResource(R.drawable.lamp_ceiling);
+            case Light.CEILING: {
+                lightImage.setImageResource(R.drawable.light_ceiling);
                 break;
             }
             default: {
-                lampImage.setImageResource(R.drawable.lamp_default);
+                lightImage.setImageResource(R.drawable.light_default);
                 break;
             }
         }
@@ -106,6 +108,7 @@ public class ConfigureLamp extends AppCompatActivity {
         //getting the camera manager and camera id
         mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
+            assert mCameraManager != null;
             mCameraId = mCameraManager.getCameraIdList()[0];
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -120,17 +123,17 @@ public class ConfigureLamp extends AppCompatActivity {
         }
     }
 
-    private void setView(ConstraintLayout layout, boolean lampIsOn, EditText name, EditText url, SeekBar brightness) {
+    private void setView(ConstraintLayout layout, boolean lightIsOn, EditText name, EditText url, SeekBar brightness) {
         // Flashlight
         if (isFlashAvailable()) {
-            toggleFlash(lampIsOn);
+            toggleFlash(lightIsOn);
         }
 
         // View and brightness
-        if (lampIsOn) {
+        if (lightIsOn) {
             if (settingsGranted) {
                 Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS_MODE, SCREEN_BRIGHTNESS_MODE_MANUAL);
-                Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS, lamp.getBrightness());
+                Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS, light.getBrightness());
             }
             layout.setBackgroundColor(getColor(android.R.color.background_light));
             name.setTextColor(getColor(android.R.color.primary_text_light));
@@ -192,6 +195,7 @@ public class ConfigureLamp extends AppCompatActivity {
         return brightness;
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     private void getPermission() {
         boolean value;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -214,6 +218,7 @@ public class ConfigureLamp extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == SETTINGS_REQUEST_CODE) {
@@ -239,32 +244,32 @@ public class ConfigureLamp extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_configure_lamp);
+        setContentView(R.layout.activity_configure_light);
 
-        // Get lamp config
+        // Get light config
         Intent intent = getIntent();
-        lamp = intent.getParcelableExtra(LampAdapter.EXTRA_CONFIG);
+        light = intent.getParcelableExtra(LightAdapter.EXTRA_CONFIG);
 
-        final EditText name = findViewById(R.id.configLampNameET);
-        name.setHint(lamp.getName());
+        final EditText name = findViewById(R.id.configLightNameET);
+        name.setHint(light.getName());
 
-        final ImageButton editName = findViewById(R.id.configLampNameBtn);
+        final ImageButton editName = findViewById(R.id.configLightNameBtn);
         editName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editCurrentText(editName, name);
                 if (editName.getTag().toString().equals(String.valueOf(0))) {
                     if (name.getHint() != "") {
-                        lamp.setName(name.getHint().toString());
+                        light.setName(name.getHint().toString());
                     } else {
-                        name.setHint(lamp.getName());
+                        name.setHint(light.getName());
                     }
                 }
             }
         });
 
         final EditText url = findViewById(R.id.configUrlET);
-        url.setHint(lamp.getUrl());
+        url.setHint(light.getUrl());
 
         final ImageButton editUrl = findViewById(R.id.configUrlBtn);
         editUrl.setOnClickListener(new View.OnClickListener() {
@@ -273,9 +278,9 @@ public class ConfigureLamp extends AppCompatActivity {
                 editCurrentText(editUrl, url);
                 if (editUrl.getTag().toString().equals(String.valueOf(0))) {
                     if (isValidUrl(url.getHint().toString())) {
-                        lamp.setUrl(url.getHint().toString());
+                        light.setUrl(url.getHint().toString());
                     } else {
-                        url.setHint(lamp.getUrl());
+                        url.setHint(light.getUrl());
                     }
                 }
             }
@@ -283,7 +288,7 @@ public class ConfigureLamp extends AppCompatActivity {
 
         final SeekBar brightControl = findViewById(R.id.brightControl);
         brightControl.setMax(255);
-        brightControl.setProgress(lamp.getBrightness());
+        brightControl.setProgress(light.getBrightness());
         brightControl.setKeyProgressIncrement(1);
 
         getPermission();
@@ -291,7 +296,7 @@ public class ConfigureLamp extends AppCompatActivity {
         brightControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                lamp.setBrightness(progress);
+                light.setBrightness(progress);
                 if (fromUser && settingsGranted) {
                     setBrightness(progress);
                 }
@@ -305,7 +310,7 @@ public class ConfigureLamp extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (!settingsGranted) {
-                    Toast.makeText(ConfigureLamp.this, "Settings access permission denied.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ConfigureLight.this, "Settings access permission denied.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -313,15 +318,15 @@ public class ConfigureLamp extends AppCompatActivity {
         final ConstraintLayout configLayout = findViewById(R.id.configLayout);
 
         getCamera();
-        setView(configLayout, lamp.isStatusOn(), name, url, brightControl);
+        setView(configLayout, light.isStatusOn(), name, url, brightControl);
 
-        ImageView lampImage = findViewById(R.id.configLampImageView);
-        setLampImage(lampImage, lamp.getType());
-        lampImage.setOnClickListener(new View.OnClickListener() {
+        ImageView lightImage = findViewById(R.id.configLightImageView);
+        setLightImage(lightImage, light.getType());
+        lightImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lamp.setStatusOn(!lamp.isStatusOn());
-                setView(configLayout, lamp.isStatusOn(), name, url, brightControl);
+                light.setStatusOn(!light.isStatusOn());
+                setView(configLayout, light.isStatusOn(), name, url, brightControl);
             }
         });
 
@@ -331,7 +336,7 @@ public class ConfigureLamp extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if (lamp.isStatusOn()) {
+        if (light.isStatusOn()) {
             if (isFlashAvailable()) {
                 toggleFlash(false);
             }
@@ -347,14 +352,14 @@ public class ConfigureLamp extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
 
-        if (lamp.isStatusOn()) {
+        if (light.isStatusOn()) {
             if (isFlashAvailable()) {
                 toggleFlash(true);
             }
 
             if (settingsGranted) {
                 Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS_MODE, SCREEN_BRIGHTNESS_MODE_MANUAL);
-                Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS, lamp.getBrightness());
+                Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS, light.getBrightness());
             }
         }
     }
@@ -370,7 +375,7 @@ public class ConfigureLamp extends AppCompatActivity {
             Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS, defaultScreenBrightness);
         }
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(EXTRA_RETURN_CONFIG, lamp);
+        intent.putExtra(EXTRA_RETURN_CONFIG, light);
         startActivity(intent);
         finish();
 

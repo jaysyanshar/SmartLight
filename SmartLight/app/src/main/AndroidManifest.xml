@@ -15,14 +15,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppThemeLight">
-        <activity android:name=".ConfigureLamp"
-            android:label="@string/configure_lamp"
+        android:fullBackupContent="true"
+        android:theme="@style/AppThemeLight"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ConfigureLight"
+            android:label="@string/configure_light"
             android:theme="@style/ConfigPageThemeLight"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".AddLamp"
-            android:label="@string/add_lamp"
+            android:name=".AddLight"
+            android:label="@string/add_light"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"

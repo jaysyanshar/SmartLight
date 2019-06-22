@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".AddLamp">
+    tools:context=".AddLight">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            android:text="@string/lamp_name"
+            android:text="@string/light_name"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/secondary_text"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,8 @@
             android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/nameTextView"
+            tools:ignore="Autofill,LabelFor" />
 
         <TextView
             android:id="@+id/urlTextView"
@@ -44,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            android:text="@string/lamp_url"
+            android:text="@string/light_url"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/secondary_text"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,14 +57,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            android:text="@string/lamp_type"
+            android:text="@string/light_type"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/secondary_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/urlLinearLayout" />
 
         <Spinner
-            android:id="@+id/lampTypeSpinner"
+            android:id="@+id/lightTypeSpinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -75,7 +76,7 @@
             app:layout_constraintTop_toBottomOf="@+id/typeTextView" />
 
         <Button
-            android:id="@+id/addLampButton"
+            android:id="@+id/addLightButton"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -83,18 +84,18 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="24dp"
             android:background="@color/design_default_color_primary"
-            android:onClick="addLamp"
-            android:text="@string/add_lamp"
+            android:onClick="addLight"
+            android:text="@string/add_light"
             android:textAllCaps="false"
             android:textColor="@android:color/primary_text_dark"
-            app:layout_constraintBottom_toTopOf="@+id/cancelAddLampButton"
+            app:layout_constraintBottom_toTopOf="@+id/cancelAddLightButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lampTypeSpinner"
+            app:layout_constraintTop_toBottomOf="@+id/lightTypeSpinner"
             app:layout_constraintVertical_bias="1.0" />
 
         <Button
-            android:id="@+id/cancelAddLampButton"
+            android:id="@+id/cancelAddLightButton"
             style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -142,7 +143,8 @@
                 android:background="@android:color/transparent"
                 android:ems="10"
                 android:inputType="textUri"
-                android:padding="8dp" />
+                android:padding="8dp"
+                tools:ignore="Autofill,LabelFor" />
         </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>

@@ -1,21 +1,21 @@
 <resources>
     <string name="app_name">Smart Light</string>
     <string name="action_settings">Settings</string>
-    <string name="lamp">lamp</string>
-    <string name="lamp_name">Lamp Name</string>
-    <string name="lamp_url">Lamp URL</string>
-    <string name="lamp_type">Lamp Type</string>
-    <string name="add_lamp">Add Lamp</string>
-    <string name="remove_lamp">Remove Lamp</string>
+    <string name="light">light</string>
+    <string name="light_name">Light Name</string>
+    <string name="light_url">Light URL</string>
+    <string name="light_type">Light Type</string>
+    <string name="add_light">Add Light</string>
+    <string name="remove_light">Remove Light</string>
     <string name="cancel">Cancel</string>
-    <string-array name="lamp_types">
-        <item>Default Lamp</item>
-        <item>Desk Lamp</item>
-        <item>Floor Lamp</item>
-        <item>Ceiling Lamp</item>
+    <string-array name="light_types">
+        <item>Default Light</item>
+        <item>Desk Light</item>
+        <item>Floor Light</item>
+        <item>Ceiling Light</item>
     </string-array>
-    <string name="success_message">"Added the new light."</string>
-    <string name="failed_message">"Failed to add the new light."</string>
+    <string name="success_message">"Added a new light."</string>
+    <string name="failed_message">"Failed to add a new light."</string>
     <string name="remove_message">"%s removed successfully."</string>
     <string name="http_url">"http://%s"</string>
     <string name="http">http://</string>
@@ -23,5 +23,5 @@
     <string name="on">ON</string>
     <string name="off">OFF</string>
     <string name="exit_remove">Exit Remove</string>
-    <string name="configure_lamp">Configure Lamp</string>
+    <string name="configure_light">Configure Light</string>
 </resources>
