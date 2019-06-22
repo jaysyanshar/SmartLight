@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import java.security.Key;
 import java.util.concurrent.ExecutionException;
 
 import static android.provider.Settings.System.SCREEN_BRIGHTNESS;
@@ -202,7 +204,6 @@ public class ConfigureLamp extends AppCompatActivity {
                 } catch (Settings.SettingNotFoundException e) {
                     e.printStackTrace();
                 }
-                Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS_MODE, SCREEN_BRIGHTNESS_MODE_MANUAL);
             } else {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                 intent.setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
@@ -226,7 +227,6 @@ public class ConfigureLamp extends AppCompatActivity {
                     } catch (Settings.SettingNotFoundException e) {
                         e.printStackTrace();
                     }
-                    Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS_MODE, SCREEN_BRIGHTNESS_MODE_MANUAL);
                 } else {
                     Toast.makeText(this, "Settings access permission denied.", Toast.LENGTH_SHORT).show();
                 }
@@ -325,6 +325,38 @@ public class ConfigureLamp extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (lamp.isStatusOn()) {
+            if (isFlashAvailable()) {
+                toggleFlash(false);
+            }
+
+            if (settingsGranted) {
+                Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS_MODE, defaultScreenBrightnessMode);
+                Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS, defaultScreenBrightness);
+            }
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        if (lamp.isStatusOn()) {
+            if (isFlashAvailable()) {
+                toggleFlash(true);
+            }
+
+            if (settingsGranted) {
+                Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS_MODE, SCREEN_BRIGHTNESS_MODE_MANUAL);
+                Settings.System.putInt(getApplicationContext().getContentResolver(), SCREEN_BRIGHTNESS, lamp.getBrightness());
+            }
+        }
     }
 
     @Override
