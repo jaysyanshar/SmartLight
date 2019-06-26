@@ -11,7 +11,7 @@
     </style>
 
     <!-- Config page theme. -->
-    <style name="ConfigPageThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="FullScreenPageThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
